@@ -29,9 +29,9 @@ export default function App() {
     return () => clearTimeout(timeout)
   }, [])
   return (
-    <Canvas dpr={[1, 2]} shadows>
+    <Canvas shadows >
       <ambientLight />
-      {/* <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 5]} castShadow /> */}
+      <directionalLight color="yellow" position={[10, 10, 5]} castShadow />
       <Physics>
         <Plane />
         <Cube position={[0, 5, 0]} />
