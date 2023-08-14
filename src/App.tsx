@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Physics, usePlane, useBox } from '@react-three/cannon'
+import { Mesh, BufferGeometry, Material } from 'three'
+import { PerspectiveCamera } from '@react-three/drei';
+
+type MeshRefType = React.MutableRefObject<Mesh<BufferGeometry, Material | Material[]>>;
 
 function Plane(props: any) {
   const [ref] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0], ...props }))
   return (
-    <mesh receiveShadow ref={ref}>
+    <mesh receiveShadow ref={ref as MeshRefType}>
       <planeGeometry args={[1000, 1000]} />
       <meshStandardMaterial color="#f0f0f0" />
     </mesh>
@@ -15,7 +19,7 @@ function Plane(props: any) {
 function Cube(props: any) {
   const [ref] = useBox(() => ({ mass: 1, ...props }))
   return (
-    <mesh castShadow ref={ref}>
+    <mesh castShadow ref={ref as MeshRefType}>
       <boxGeometry />
       <meshStandardMaterial color="orange" />
     </mesh>
@@ -30,6 +34,7 @@ export default function App() {
   }, [])
   return (
     <Canvas shadows >
+      {/* <PerspectiveCamera makeDefault position={[0, 5, 5]} /> */}
       <ambientLight />
       <directionalLight color="yellow" position={[10, 10, 5]} castShadow />
       <Physics>
