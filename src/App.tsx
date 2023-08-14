@@ -1,42 +1,44 @@
-// import { useState } from 'react'
-import './App.css'
+import { useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { Physics, usePlane, useBox } from '@react-three/cannon'
 
-function App() {
-  // const [count, setCount] = useState(0)
-
+function Plane(props: any) {
+  const [ref] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0], ...props }))
   return (
-    <div>
-      <h1>React Three Fiber Physics Synth</h1>
-      <div id="canvas-container">
-        <Canvas children={undefined} />
-      </div>
-    </div>
-    /*
-        <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-    */
+    <mesh receiveShadow ref={ref}>
+      <planeGeometry args={[1000, 1000]} />
+      <meshStandardMaterial color="#f0f0f0" />
+    </mesh>
   )
 }
 
-export default App
+function Cube(props: any) {
+  const [ref] = useBox(() => ({ mass: 1, ...props }))
+  return (
+    <mesh castShadow ref={ref}>
+      <boxGeometry />
+      <meshStandardMaterial color="orange" />
+    </mesh>
+  )
+}
+
+export default function App() {
+  const [ready, set] = useState(false)
+  useEffect(() => {
+    const timeout = setTimeout(() => set(true), 1000)
+    return () => clearTimeout(timeout)
+  }, [])
+  return (
+    <Canvas dpr={[1, 2]} shadows>
+      <ambientLight />
+      {/* <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 5]} castShadow /> */}
+      <Physics>
+        <Plane />
+        <Cube position={[0, 5, 0]} />
+        <Cube position={[0.45, 7, -0.25]} />
+        <Cube position={[-0.45, 9, 0.25]} />
+        {ready && <Cube position={[-0.45, 10, 0.25]} />}
+      </Physics>
+    </Canvas>
+  )
+}
