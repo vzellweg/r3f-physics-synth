@@ -1,7 +1,7 @@
 import { useEffect, useState, createContext, useContext } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Physics, useBox, useSphere } from '@react-three/cannon'
-import { CameraControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { button, useControls } from "leva"
 import * as Tone from 'tone';
 import { MeshRefType } from './types';
@@ -96,8 +96,8 @@ export default function App() {
 
   return (
       <Canvas shadows >
-        {/* <PerspectiveCamera makeDefault position={[0, 5, 5]} /> */}
-        <CameraControls />
+        <PerspectiveCamera makeDefault position={[0, 3, 10]} />
+        <OrbitControls target={[0,0,0]} />
         <ambientLight />
         <directionalLight color="yellow" position={[10, 10, 5]} castShadow />
         <Physics>
