@@ -52,8 +52,14 @@ const hitSampler = new Tone.Sampler({
 }).toDestination();
   
 export const Context = createContext({
-  onCollisionEvent: () => {
-    console.log("onCollisionEvent");
+  onCollisionEvent: (e: any) => {
+    const velocity = e.contact.impactVelocity;
+    // Scale the volume based on the velocity
+    const gain = Math.min(velocity, 1); 
+    // Set the volume
+    hitSampler.volume.value = Tone.gainToDb(gain);
+
+    console.log("impactVelocity, gain", velocity, gain);
     hitSampler.triggerAttack("C3");
   }
 });
