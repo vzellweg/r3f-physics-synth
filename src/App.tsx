@@ -29,7 +29,7 @@ export const Cube = (props: { position: [number, number, number] }) => {
   return (
     <mesh castShadow ref={ref as MeshRefType}>
       <boxGeometry />
-      <meshStandardMaterial color="orange" />
+      <meshStandardMaterial color="ghostwhite" />
     </mesh>
   )
 }
@@ -40,7 +40,7 @@ const  Sphere = (props: { position: [number, number, number] }) => {
   return (
     <mesh castShadow ref={ref as MeshRefType}>
       <sphereGeometry />
-      <meshStandardMaterial color="orange" />
+      <meshStandardMaterial color="mistyrose" />
     </mesh>
   )
 }
@@ -55,7 +55,7 @@ export const Context = createContext({
   onCollisionEvent: (e: any) => {
     const velocity = e.contact.impactVelocity;
     // Scale the volume based on the velocity
-    const gain = Math.min(velocity, 1); 
+    const gain = Math.min(velocity / 2, 1); 
     // Set the volume
     hitSampler.volume.value = Tone.gainToDb(gain);
 
@@ -96,12 +96,13 @@ export default function App() {
 
   return (
       <Canvas shadows >
-        <PerspectiveCamera makeDefault position={[0, 3, 10]} />
+        <PerspectiveCamera makeDefault position={[0, 3, 15]} />
         <OrbitControls target={[0,0,0]} />
-        <ambientLight />
-        <directionalLight color="yellow" position={[10, 10, 5]} castShadow />
+        <ambientLight intensity={ 0.5 } />
+        <directionalLight color="greenyellow" position={[20, 20, 25]} castShadow />
+        <directionalLight color="plum" position={[-20, 10, 25]} />
         <Physics>
-          <Plane size={[25,25]} />
+          <Plane size={[15,15]} />
           {cubes.map((cube, i) => (
             <Cube key={i} position={cube.position} />
           ))}
