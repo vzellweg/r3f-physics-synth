@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createContext, useContext } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Physics, usePlane, useBox, useSphere } from '@react-three/cannon'
-import { Mesh, BufferGeometry, Material } from 'three'
+import { Physics, useBox, useSphere } from '@react-three/cannon'
 import { CameraControls, PerspectiveCamera } from '@react-three/drei';
 import { button, useControls } from "leva"
+import * as Tone from 'tone';
+import { MeshRefType } from './types';
 
-type MeshRefType = React.MutableRefObject<Mesh<BufferGeometry, Material | Material[]>>;
 
-function Plane(props: { size: [number, number] }) {
+const Plane = (props: { size: [number, number] }) => {
   const { size } = props;
   const [ref] = useBox(() => ({
     args: [...size, .1],
@@ -22,8 +22,10 @@ function Plane(props: { size: [number, number] }) {
   )
 }
 
-function Cube(props: any) {
-  const [ref] = useBox(() => ({ mass: 1, ...props }))
+export const Cube = (props: { position: [number, number, number] }) => {
+  const { onCollisionEvent } = useContext(Context);
+  const [ref] = useBox(() => ({ mass: 1, onCollide: onCollisionEvent,  ...props }))
+
   return (
     <mesh castShadow ref={ref as MeshRefType}>
       <boxGeometry />
@@ -32,8 +34,9 @@ function Cube(props: any) {
   )
 }
 
-function Sphere(props: { position: [number, number, number] }) {
-  const [ref] = useSphere(() => ({ mass: 1, ...props }))
+const  Sphere = (props: { position: [number, number, number] }) => {
+  const { onCollisionEvent } = useContext(Context);
+  const [ref] = useSphere(() => ({ mass: 1, onCollide: onCollisionEvent, ...props }))
   return (
     <mesh castShadow ref={ref as MeshRefType}>
       <sphereGeometry />
@@ -42,14 +45,26 @@ function Sphere(props: { position: [number, number, number] }) {
   )
 }
 
-
+  
+const hitSampler = new Tone.Sampler({
+    urls: { C3: "hit.mp3" },
+    baseUrl: "./sounds/",
+}).toDestination();
+  
+export const Context = createContext({
+  onCollisionEvent: () => {
+    console.log("onCollisionEvent");
+    hitSampler.triggerAttack("C3");
+  }
+});
 
 export default function App() {
+  // Delayed instantiation of a cube
   const [ready, set] = useState(false);
   useEffect(() => {
-    const timeout = setTimeout(() => set(true), 10000)
+    const timeout = setTimeout(() => set(true), 1000)
     return () => clearTimeout(timeout)
-  }, [])
+  }, []);
 
   // Cube instantiation
   const [cubes, setCubes] = useState<{ position: [number, number, number] }[]>([
@@ -74,24 +89,21 @@ export default function App() {
   });
 
   return (
-    <Canvas shadows >
-      {/* <PerspectiveCamera makeDefault position={[0, 5, 5]} /> */}
-      <CameraControls />
-      <ambientLight />
-      <directionalLight color="yellow" position={[10, 10, 5]} castShadow />
-      <Physics>
-        <Plane size={[25,25]} />
-        {cubes.map((cube, i) => (
-          <Cube key={i} position={cube.position} />
-        ))}
-        {spheres.map((sphere, i) => (
-          <Sphere key={i} position={sphere.position} />
-        ))}
-        <Cube position={[0, 5, 0]} />
-        <Cube position={[0.45, 7, -0.25]} />
-        <Cube position={[-0.45, 9, 0.25]} />
-        {ready && <Cube position={[-0.45, 10, 0.25]} />}
-      </Physics>
-    </Canvas>
+      <Canvas shadows >
+        {/* <PerspectiveCamera makeDefault position={[0, 5, 5]} /> */}
+        <CameraControls />
+        <ambientLight />
+        <directionalLight color="yellow" position={[10, 10, 5]} castShadow />
+        <Physics>
+          <Plane size={[25,25]} />
+          {cubes.map((cube, i) => (
+            <Cube key={i} position={cube.position} />
+          ))}
+          {spheres.map((sphere, i) => (
+            <Sphere key={i} position={sphere.position} />
+          ))}
+          {ready && <Cube position={[0, 5, 0]} />}
+        </Physics>
+      </Canvas>
   )
 }
