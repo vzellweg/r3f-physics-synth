@@ -1,8 +1,10 @@
-import { Mesh, BufferGeometry, Material } from 'three'
+import { Mesh, BufferGeometry, Material } from "three";
 
 // Types
-export type MeshRefType = React.MutableRefObject<Mesh<BufferGeometry, Material | Material[]>>;
+export type MeshRefType = React.MutableRefObject<
+  Mesh<BufferGeometry, Material | Material[]>
+>;
 
 export type ContextType = {
-  onCollisionEvent: () => void,
+  onCollisionEvent: () => void;
 };
