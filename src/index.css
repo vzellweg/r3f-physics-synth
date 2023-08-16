@@ -2,7 +2,6 @@
   box-sizing: border-box;
 }
 
-
 html,
 body,
 #root {
@@ -16,4 +15,16 @@ body {
   background: #f0f0f0;
 }
 
-
+.bg-grapefruit-sunset {
+  background: #e96443; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #904e95,
+    #e96443
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #904e95,
+    #e96443
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}

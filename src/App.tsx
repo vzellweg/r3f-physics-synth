@@ -1,7 +1,11 @@
 import { useEffect, useState, createContext, useContext } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Physics, useBox, useSphere } from "@react-three/cannon";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import {
+  OrbitControls,
+  PerspectiveCamera,
+  MeshTransmissionMaterial,
+} from "@react-three/drei";
 import { button, useControls } from "leva";
 import * as Tone from "tone";
 import { MeshRefType } from "./types";
@@ -41,7 +45,13 @@ export const Cube = (props: { position: [number, number, number] }) => {
   return (
     <mesh castShadow ref={ref as MeshRefType}>
       <boxGeometry />
-      <meshStandardMaterial color="ghostwhite" />
+      <MeshTransmissionMaterial
+        ior={1.2}
+        thickness={1.5}
+        anisotropy={0.1}
+        chromaticAberration={0.04}
+      />
+      {/* <meshStandardMaterial color="ghostwhite" /> */}
     </mesh>
   );
 };
@@ -56,7 +66,12 @@ const Sphere = (props: { position: [number, number, number] }) => {
   return (
     <mesh castShadow ref={ref as MeshRefType}>
       <sphereGeometry />
-      <meshStandardMaterial color="mistyrose" />
+      <MeshTransmissionMaterial
+        ior={1.2}
+        thickness={1.5}
+        anisotropy={0.1}
+        chromaticAberration={0.04}
+      />
     </mesh>
   );
 };
