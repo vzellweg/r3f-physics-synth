@@ -123,7 +123,7 @@ export const Context = createContext({
     instrument.volume.value = Tone.gainToDb(gain);
 
     console.log("impactVelocity, gain", velocity, gain);
-    instrument.triggerAttack("C4");
+    instrument.triggerAttack("C2");
   },
 });
 
