@@ -7,6 +7,7 @@ import {
   MeshTransmissionMaterial,
   Environment,
   PerformanceMonitor,
+  MeshReflectorMaterial,
 } from "@react-three/drei";
 import { button, useControls } from "leva";
 import * as Tone from "tone";
@@ -32,7 +33,16 @@ const Plane = (props: { size: [number, number] }) => {
   return (
     <mesh receiveShadow ref={ref as MeshRefType}>
       <planeGeometry args={size} />
-      <meshStandardMaterial color="#f0f0f0" />
+      <MeshReflectorMaterial
+        // blur={[400, 100]}
+        resolution={1024}
+        mirror={1}
+        // mixStrength={15}
+        color="#edf0f7"
+        metalness={0.6}
+        roughness={0.8}
+      />
+      {/* <meshStandardMaterial color="#f0f0f0" /> */}
     </mesh>
   );
 };
@@ -52,11 +62,10 @@ export const Cube = (props: { position: [number, number, number] }) => {
         ior={1.2}
         thickness={1.5}
         anisotropy={0.1}
-        chromaticAberration={0.04}
+        chromaticAberration={0.8}
         distortionScale={0.5}
         temporalDistortion={0}
       />
-      {/* <meshStandardMaterial color="ghostwhite" /> */}
     </mesh>
   );
 };
@@ -123,7 +132,7 @@ export default function App() {
   // Sphere instantiation
   const [spheres, setSpheres] = useState<
     { position: [number, number, number] }[]
-  >([{ position: [0, 5, 0] }]);
+  >([{ position: [3, 5, 0] }]);
   const addSphere = (position: [number, number, number]) => {
     setSpheres((prevSpheres) => [...prevSpheres, { position }]);
   };
@@ -133,8 +142,8 @@ export default function App() {
 
   // Leva controls
   useControls({
-    "Add Cube": button(() => addCube([0, 5, 0])),
-    "Add Sphere": button(() => addSphere([0, 5, 0])),
+    "Add Cube": button(() => addCube([Math.random(), 5, Math.random()])),
+    "Add Sphere": button(() => addSphere([Math.random(), 5, Math.random()])),
     soundType: {
       value: debugConsts.soundType,
       options: {
@@ -149,12 +158,12 @@ export default function App() {
     <Canvas shadows>
       <PerspectiveCamera makeDefault position={[0, 3, 15]} />
       <OrbitControls target={[0, 0, 0]} />
-      <ambientLight intensity={0.5} />
-      <directionalLight
+      <ambientLight intensity={0.8} />
+      {/* <directionalLight
         color="greenyellow"
         position={[20, 20, 25]}
         castShadow
-      />
+      /> */}
       <directionalLight color="plum" position={[-20, 10, 25]} />
       {/** PerfMon will detect performance issues */}
       <PerformanceMonitor onDecline={() => degrade(true)} />
@@ -175,7 +184,7 @@ export default function App() {
         {spheres.map((sphere, i) => (
           <Sphere key={i} position={sphere.position} />
         ))}
-        {ready && <Cube position={[0, 5, 0]} />}
+        {ready && <Cube position={[-1, 5, 0.5]} />}
       </Physics>
     </Canvas>
   );
