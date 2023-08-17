@@ -20,7 +20,7 @@ enum SoundType {
 }
 
 const debugConsts = {
-  soundType: SoundType.Sampler,
+  soundType: SoundType.Synth,
 };
 
 const Plane = (props: { size: [number, number] }) => {
