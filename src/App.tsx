@@ -8,6 +8,8 @@ import {
   Environment,
   PerformanceMonitor,
   MeshReflectorMaterial,
+  Box,
+  Sphere,
 } from "@react-three/drei";
 import { button, useControls } from "leva";
 import * as Tone from "tone";
@@ -47,17 +49,23 @@ const Plane = (props: { size: [number, number] }) => {
   );
 };
 
-export const Cube = (props: { position: [number, number, number] }) => {
+export const GlassCube = (props: { position: [number, number, number] }) => {
   const { onCollisionEvent } = useContext(Context);
-  const [ref] = useBox(() => ({
+  const [ref, api] = useBox(() => ({
     mass: 1,
     onCollide: onCollisionEvent,
     ...props,
   }));
 
   return (
-    <mesh castShadow ref={ref as MeshRefType}>
-      <boxGeometry />
+    <Box
+      castShadow
+      ref={ref as MeshRefType}
+      onClick={() => {
+        api.applyImpulse([0, 5, 2], [0, -1, 0]);
+      }}
+    >
+      {/* <boxGeometry /> */}
       <MeshTransmissionMaterial
         ior={1.2}
         thickness={1.5}
@@ -66,19 +74,25 @@ export const Cube = (props: { position: [number, number, number] }) => {
         distortionScale={0.5}
         temporalDistortion={0}
       />
-    </mesh>
+    </Box>
   );
 };
 
-const Sphere = (props: { position: [number, number, number] }) => {
+const GlassSphere = (props: { position: [number, number, number] }) => {
   const { onCollisionEvent } = useContext(Context);
-  const [ref] = useSphere(() => ({
+  const [ref, api] = useSphere(() => ({
     mass: 1,
     onCollide: onCollisionEvent,
     ...props,
   }));
   return (
-    <mesh castShadow ref={ref as MeshRefType}>
+    <Sphere
+      castShadow
+      ref={ref as MeshRefType}
+      onClick={() => {
+        api.applyImpulse([0, 5, 2], [0, -1, 0]);
+      }}
+    >
       <sphereGeometry />
       <MeshTransmissionMaterial
         ior={1.2}
@@ -88,7 +102,7 @@ const Sphere = (props: { position: [number, number, number] }) => {
         distortionScale={0.5}
         temporalDistortion={0}
       />
-    </mesh>
+    </Sphere>
   );
 };
 
@@ -109,7 +123,7 @@ export const Context = createContext({
     instrument.volume.value = Tone.gainToDb(gain);
 
     console.log("impactVelocity, gain", velocity, gain);
-    instrument.triggerAttack("C3");
+    instrument.triggerAttack("C4");
   },
 });
 
@@ -179,12 +193,12 @@ export default function App() {
       <Physics>
         <Plane size={[15, 15]} />
         {cubes.map((cube, i) => (
-          <Cube key={i} position={cube.position} />
+          <GlassCube key={i} position={cube.position} />
         ))}
         {spheres.map((sphere, i) => (
-          <Sphere key={i} position={sphere.position} />
+          <GlassSphere key={i} position={sphere.position} />
         ))}
-        {ready && <Cube position={[-1, 5, 0.5]} />}
+        {ready && <GlassCube position={[-1, 5, 0.5]} />}
       </Physics>
     </Canvas>
   );
