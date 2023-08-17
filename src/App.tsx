@@ -5,10 +5,13 @@ import {
   OrbitControls,
   PerspectiveCamera,
   MeshTransmissionMaterial,
+  Environment,
+  PerformanceMonitor,
 } from "@react-three/drei";
 import { button, useControls } from "leva";
 import * as Tone from "tone";
 import { MeshRefType } from "./types";
+import { Lightformers } from "./LightFormers";
 
 enum SoundType {
   Sampler,
@@ -50,6 +53,8 @@ export const Cube = (props: { position: [number, number, number] }) => {
         thickness={1.5}
         anisotropy={0.1}
         chromaticAberration={0.04}
+        distortionScale={0.5}
+        temporalDistortion={0}
       />
       {/* <meshStandardMaterial color="ghostwhite" /> */}
     </mesh>
@@ -71,6 +76,8 @@ const Sphere = (props: { position: [number, number, number] }) => {
         thickness={1.5}
         anisotropy={0.1}
         chromaticAberration={0.04}
+        distortionScale={0.5}
+        temporalDistortion={0}
       />
     </mesh>
   );
@@ -121,6 +128,9 @@ export default function App() {
     setSpheres((prevSpheres) => [...prevSpheres, { position }]);
   };
 
+  // Degrade performance
+  const [degraded, degrade] = useState(false);
+
   // Leva controls
   useControls({
     "Add Cube": button(() => addCube([0, 5, 0])),
@@ -146,6 +156,17 @@ export default function App() {
         castShadow
       />
       <directionalLight color="plum" position={[-20, 10, 25]} />
+      {/** PerfMon will detect performance issues */}
+      <PerformanceMonitor onDecline={() => degrade(true)} />
+      {/* Renders contents "live" into a HDRI environment (scene.environment). */}
+      <Environment
+        frames={degraded ? 1 : Infinity}
+        resolution={256}
+        background
+        blur={1}
+      >
+        <Lightformers />
+      </Environment>
       <Physics>
         <Plane size={[15, 15]} />
         {cubes.map((cube, i) => (

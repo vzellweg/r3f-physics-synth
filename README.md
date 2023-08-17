@@ -18,6 +18,15 @@ Today I implemented the audio cues for collisions in the 3d scene. Setting up ev
 
 I learned about usign the React Context hook today, it seems super useful for smaller projects that have components that need to communicate state and don't lie in a parent-child relationship.
 
+### Day 3
+
+Some cool examples I found that I can take inspiration from:
+
+- [react-three/cannon physics examples](https://cannon.pmnd.rs/#/demo/MondayMorning)
+- [cool lamina stuff](https://codesandbox.io/embed/github/pmndrs/lamina/tree/main/examples/complex-materials)
+
+I did not work on this project much today, but I got a cool dynamic environment map going that gives the glass-like materials some cool colors to refract.
+
 # Boilerplate README content
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
