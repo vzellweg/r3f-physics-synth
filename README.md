@@ -27,6 +27,10 @@ Some cool examples I found that I can take inspiration from:
 
 I did not work on this project much today, but I got a cool dynamic environment map going that gives the glass-like materials some cool colors to refract.
 
+### Day 4
+
+Today I learned even more benefits to using R3F over vanilla three.js. The drei geometry components allow you to set `onClick` listeners on your meshes, just like you would on any other html element. This is a huge benefit over vanilla three.js where you have to setup a raycaster and parse the intersections, before determining which object to act on. The code for this project is turning out much more concise and organized than a vanilla three.js project.
+
 # Boilerplate README content
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
