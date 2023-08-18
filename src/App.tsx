@@ -15,6 +15,7 @@ import { button, useControls } from "leva";
 import * as Tone from "tone";
 import { MeshRefType } from "./types";
 import { Lightformers } from "./LightFormers";
+import { Perf } from "r3f-perf";
 
 enum SoundType {
   Sampler,
@@ -171,14 +172,10 @@ export default function App() {
   return (
     <>
       <Canvas shadows>
+        <Perf position="top-left" />
         <PerspectiveCamera makeDefault position={[0, 3, 15]} />
         <OrbitControls target={[0, 0, 0]} />
         <ambientLight intensity={0.8} />
-        {/* <directionalLight
-        color="greenyellow"
-        position={[20, 20, 25]}
-        castShadow
-      /> */}
         <directionalLight color="plum" position={[-20, 10, 25]} />
         {/** PerfMon will detect performance issues */}
         <PerformanceMonitor onDecline={() => degrade(true)} />
