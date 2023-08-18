@@ -169,37 +169,52 @@ export default function App() {
   });
 
   return (
-    <Canvas shadows>
-      <PerspectiveCamera makeDefault position={[0, 3, 15]} />
-      <OrbitControls target={[0, 0, 0]} />
-      <ambientLight intensity={0.8} />
-      {/* <directionalLight
+    <>
+      <Canvas shadows>
+        <PerspectiveCamera makeDefault position={[0, 3, 15]} />
+        <OrbitControls target={[0, 0, 0]} />
+        <ambientLight intensity={0.8} />
+        {/* <directionalLight
         color="greenyellow"
         position={[20, 20, 25]}
         castShadow
       /> */}
-      <directionalLight color="plum" position={[-20, 10, 25]} />
-      {/** PerfMon will detect performance issues */}
-      <PerformanceMonitor onDecline={() => degrade(true)} />
-      {/* Renders contents "live" into a HDRI environment (scene.environment). */}
-      <Environment
-        frames={degraded ? 1 : Infinity}
-        resolution={256}
-        background
-        blur={1}
+        <directionalLight color="plum" position={[-20, 10, 25]} />
+        {/** PerfMon will detect performance issues */}
+        <PerformanceMonitor onDecline={() => degrade(true)} />
+        {/* Renders contents "live" into a HDRI environment (scene.environment). */}
+        <Environment
+          frames={degraded ? 1 : Infinity}
+          resolution={256}
+          background
+          blur={1}
+        >
+          <Lightformers />
+        </Environment>
+        <Physics>
+          <Plane size={[15, 15]} />
+          {cubes.map((cube, i) => (
+            <GlassCube key={i} position={cube.position} />
+          ))}
+          {spheres.map((sphere, i) => (
+            <GlassSphere key={i} position={sphere.position} />
+          ))}
+          {ready && <GlassCube position={[-1, 5, 0.5]} />}
+        </Physics>
+      </Canvas>
+      <div
+        style={{
+          position: "absolute",
+          bottom: 50,
+          left: 50,
+          fontSize: "18px",
+        }}
       >
-        <Lightformers />
-      </Environment>
-      <Physics>
-        <Plane size={[15, 15]} />
-        {cubes.map((cube, i) => (
-          <GlassCube key={i} position={cube.position} />
-        ))}
-        {spheres.map((sphere, i) => (
-          <GlassSphere key={i} position={sphere.position} />
-        ))}
-        {ready && <GlassCube position={[-1, 5, 0.5]} />}
-      </Physics>
-    </Canvas>
+        <p>
+          Click and drag mouse to orbit the camera, use the mouse wheel to zoom
+        </p>
+        <p>Click on an object to move it</p>
+      </div>
+    </>
   );
 }
