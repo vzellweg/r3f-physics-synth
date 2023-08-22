@@ -38,7 +38,7 @@ const Plane = (props: { size: [number, number] }) => {
       <planeGeometry args={size} />
       <MeshReflectorMaterial
         // blur={[400, 100]}
-        resolution={1024}
+        resolution={2048}
         mirror={1}
         // mixStrength={15}
         color="#edf0f7"
