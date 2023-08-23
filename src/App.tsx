@@ -118,13 +118,10 @@ export const Context = createContext({
     const instrument =
       debugConsts.soundType === SoundType.Sampler ? hitSampler : hitSynth;
     const velocity = e.contact.impactVelocity;
-    // Scale the volume based on the velocity
+    // Scale the volume based on the velocity TODO: use a map function to scale the velocity
     const gain = Math.min(velocity / 4, 1);
-    // Set the volume
-    instrument.volume.value = Tone.gainToDb(gain);
 
-    console.log("impactVelocity, gain", velocity, gain);
-    instrument.triggerAttack("C2");
+    instrument.triggerAttack("C2", Tone.now(), gain);
   },
 });
 
